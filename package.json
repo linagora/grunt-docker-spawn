@@ -1,0 +1,46 @@
+{
+  "name": "grunt-docker-spawn",
+  "version": "0.0.0",
+  "description": "Grunt task to run docker containers",
+  "main": "index.js",
+  "scripts": {
+    "test": "grunt"
+  },
+  "files": [
+    "tasks"
+  ],
+  "keywords": [
+    "grunt",
+    "gruntplugin",
+    "container",
+    "docker",
+    "spawn",
+    "cli",
+    "integration testing"
+  ],
+  "author": {
+    "name": "Stéphen Le Maistre",
+    "email": "slemaistre@linagora.com"
+  },
+  "contributors": [
+    "Github Contributors (https://github.com/linagora/grunt-docker-spawn/graphs/contributors)"
+  ],
+  "bin": "bin/grunt-docker-spawn",
+  "homepage": "https://github.com/linagora/grunt-docker-spawn",
+  "bugs": "https://github.com/linagora/grunt-docker-spawn/issues",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/linagora/grunt-docker-spawn.git"
+  },
+  "licenses": {
+    "type": "MIT"
+  },
+  "dependencies": {
+    "dockerode": "~2.2.1"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "^0.11.2",
+    "grunt-release": "^0.13.0"
+  }
+}
