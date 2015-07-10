@@ -1,6 +1,6 @@
 {
   "name": "grunt-docker-spawn",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Grunt task to run docker containers",
   "main": "index.js",
   "scripts": {
