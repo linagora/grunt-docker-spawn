@@ -25,7 +25,6 @@
   "contributors": [
     "Github Contributors (https://github.com/linagora/grunt-docker-spawn/graphs/contributors)"
   ],
-  "bin": "bin/grunt-docker-spawn",
   "homepage": "https://github.com/linagora/grunt-docker-spawn",
   "bugs": "https://github.com/linagora/grunt-docker-spawn/issues",
   "repository": {
