@@ -9,11 +9,6 @@ module.exports = function(grunt) {
         jshintrc: '.jshintrc'
       },
       files: ['Gruntfile.js', 'tasks/**/*.js', 'test/**/*.js']
-    },
-    release: {
-      options: {
-        npmtag: true
-      }
     }
   });
 
