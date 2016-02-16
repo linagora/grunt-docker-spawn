@@ -32,6 +32,7 @@ module.exports = function(grunt) {
       container.remove({ force: true }, function(err, data) {
         if (err) {
           grunt.fatal('Unable to remove container for target: ' + target + ' - ' + err.message);
+
           return done(false);
         }
         delete containers[target];
@@ -43,6 +44,7 @@ module.exports = function(grunt) {
       docker.pull(data.Image, function(err, stream) {
         if (err) {
           grunt.fatal('Could no pull image for target: ' + target + ' - ' + err.message);
+
           return done(false);
         }
         stream.on('data', function(chunk) {

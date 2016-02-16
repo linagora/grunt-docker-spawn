@@ -38,8 +38,17 @@
     "dockerode": "~2.2.1"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
     "grunt": "^0.4.5",
-    "grunt-contrib-jshint": "^0.11.2",
-    "grunt-release": "^0.13.0"
+    "grunt-contrib-jshint": "0.11.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-exec": "0.4.6",
+    "grunt-jscs": "2.1.0",
+    "grunt-lint-pattern": "0.1.4",
+    "grunt-mocha-test": "^0.12.7",
+    "grunt-release": "^0.13.0",
+    "load-grunt-tasks": "3.2.0",
+    "mocha": "^2.4.5",
+    "mockery": "^1.4.0"
   }
 }
