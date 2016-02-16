@@ -1,13 +1,14 @@
 'use strict';
 
 var Docker = require('dockerode');
+var DEFAULT_DOCKER_OPTIONS = {socketPath: '/var/run/docker.sock'};
 
 module.exports = function(grunt) {
   var log = grunt.log;
   var containers = {};
 
   grunt.registerMultiTask('container', 'Run a container', function() {
-    var docker = new Docker(this.docker || {socketPath: '/var/run/docker.sock'});
+    var docker = new Docker(this.options()[grunt.option('docker')] || DEFAULT_DOCKER_OPTIONS);
 
     var options = this.options();
     var done = options.tasks.async ? function() {} : this.async();
