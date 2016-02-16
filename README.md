@@ -60,6 +60,16 @@ purpose for instance):
     ...
     
     container: {
+      options: {
+        machine: {
+          host: '192.168.99.100',
+          port: 2376,
+          ca: fs.readFileSync(process.env.DOCKER_CERT_PATH + '/ca.pem', 'utf-8'),
+          cert: fs.readFileSync(process.env.DOCKER_CERT_PATH + '/cert.pem', 'utf-8'),
+          key: fs.readFileSync(process.env.DOCKER_CERT_PATH + '/key.pem', 'utf-8'),
+          pass: 'mypass'
+        }
+      },
       redis: {
         Image: 'redis:latest',
         Name: 'redis',
@@ -98,6 +108,13 @@ purpose for instance):
     }
 
 /!\ Do not forget to pull containers first if it is not already done. grunt-docker-spawn uses **docker start** implementation of dockerode, not **docker run** /!\
+
+The options to give to instanciate a dockerode client can be set at the task level and selected with the docker argument:
+
+```bash
+grunt container:redis --docker=machine
+```
+This will instanciate the dockerode client with the configuration block defined in options.machine. Check the dockerode documentation for possible values.
 
 Pull needed container
 =====================
