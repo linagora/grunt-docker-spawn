@@ -86,7 +86,7 @@ module.exports = function(grunt) {
               });
 
               stream.on('end', function() {
-                done();
+                options.matchOutput(null);
               });
             });
           } else {
