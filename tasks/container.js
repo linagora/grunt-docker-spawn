@@ -84,6 +84,10 @@ module.exports = function(grunt) {
               stream.on('data', function(data) {
                 options.matchOutput(data);
               });
+
+              stream.on('end', function() {
+                options.matchOutput(null);
+              });
             });
           } else {
             done();
