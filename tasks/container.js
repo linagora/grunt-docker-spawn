@@ -23,13 +23,24 @@ module.exports = function(grunt) {
     var command = this.args[0];
 
     if (command === 'remove') {
-      container = containers[target];
+      container = containers[target] || docker.getContainer(data.name);
+
       if (!container) {
         grunt.fatal('No running container for target: ' + target);
       }
+
       log.writeln('Removing container for target: ' + target + ' (id = ' + container.id + ')');
 
-      container.remove({ force: true }, function(err, data) {
+      var removeContainerOptions = { force: true, v: true };
+      if (options.removeContainerOptions) {
+        for (var key in options.removeContainerOptions) {
+          if (options.removeContainerOptions.hasOwnProperty(key)) {
+            removeContainerOptions[key] = options.removeContainerOptions[key];
+          }
+        }
+      }
+
+      container.remove(removeContainerOptions, function(err, data) {
         if (err) {
           grunt.fatal('Unable to remove container for target: ' + target + ' - ' + err.message);
 

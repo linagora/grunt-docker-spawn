@@ -8,7 +8,7 @@ One of the best use of this task is being able to run complex integration tests 
 and setups problematics.
 
 The second best use is to be able to test your application against several backend versions without the need of a hard and long installation/uninstall process.
-Thus, you only need to pull a specific version then run your backend tests (ie: mongo:2.6.6, mongo:3.0.4, ...). 
+Thus, you only need to pull a specific version then run your backend tests (ie: mongo:2.6.6, mongo:3.0.4, ...).
 
 Install
 =======
@@ -25,14 +25,15 @@ Examples
 The general configuration for a specific container is as follows:
 
     containerName: {
-      Image: {String}                    // The repository and name of the image to pull from the dockerhub 
+      Image: {String}                    // The repository and name of the image to pull from the dockerhub
       Cmd: [String]                      // The command which will override the default one
       Name: {String}                     // The name you want the new container to have
       Options: {
         tasks: {
           async: true
         },
-        startContainerOptions: {Object}  // Directly forwarded option to the [docker API](https://docs.docker.com/reference/api/docker_remote_api/#full-documentation) 
+        startContainerOptions: {Object}  // Directly forwarded option to the [docker API](https://docs.docker.com/reference/api/docker_remote_api/#full-documentation)
+        removeContainerOptions: {Object} // Directly forwarded option to the [docker API](https://docs.docker.com/reference/api/docker_remote_api/#full-documentation), default { v: true, force: true }
         matchOuput: {function(chunk)}    // Callback called with the standard outputted data of the container as first argument
       }
     }
@@ -56,9 +57,9 @@ purpose for instance):
         }
       };
     }
-    
+
     ...
-    
+
     container: {
       options: {
         machine: {
