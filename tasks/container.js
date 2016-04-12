@@ -32,6 +32,7 @@ module.exports = function(grunt) {
       log.writeln('Removing container for target: ' + target + ' (id = ' + container.id + ')');
 
       var removeContainerOptions = { force: true, v: true };
+
       if (options.removeContainerOptions) {
         for (var key in options.removeContainerOptions) {
           if (options.removeContainerOptions.hasOwnProperty(key)) {
