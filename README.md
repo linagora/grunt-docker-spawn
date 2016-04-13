@@ -29,12 +29,14 @@ The general configuration for a specific container is as follows:
       Cmd: [String]                      // The command which will override the default one
       Name: {String}                     // The name you want the new container to have
       Options: {
-        tasks: {
-          async: true
+        taskOptions: {
+          async: true,
+          matchOuput: {function(chunk, done)}    // Callback called with the standard outputted data of the container as first argument and the done callback
+          timeout: {Number} // milliseconds, if the task is not done after timeout, it will be marked as failed
         },
         startContainerOptions: {Object}  // Directly forwarded option to the [docker API](https://docs.docker.com/reference/api/docker_remote_api/#full-documentation)
         removeContainerOptions: {Object} // Directly forwarded option to the [docker API](https://docs.docker.com/reference/api/docker_remote_api/#full-documentation), default { v: true, force: true }
-        matchOuput: {function(chunk)}    // Callback called with the standard outputted data of the container as first argument
+
       }
     }
 
@@ -47,8 +49,7 @@ purpose for instance):
     * Ensure that service of containers are finished to start.
     */
     function _taskSuccessIfMatch(grunt, regex, info) {
-      return function(chunk) {
-        var done = grunt.task.current.async();
+      return function(chunk, done) {
         var out = '' + chunk;
         var started = regex;
         if (started.test(out)) {
@@ -75,11 +76,11 @@ purpose for instance):
         Image: 'redis:latest',
         Name: 'redis',
         Options: {
-          tasks: {
-            async: true
+          taskOptions: {
+            async: true,
+            matchOuput: _taskSuccessIfMatch(grunt, /on port/, 'Redis server is started')
           },
-          startContainerOptions: { PortBindings: { '6379/tcp': [{ 'HostPort': '23456' }] } },
-          matchOuput: _taskSuccessIfMatch(grunt, /on port/, 'Redis server is started')
+          startContainerOptions: { PortBindings: { '6379/tcp': [{ 'HostPort': '23456' }] } }
         }
       },
       mongodb: {
@@ -87,11 +88,12 @@ purpose for instance):
         Cmd: 'mongod --replSet replication --smallfiles --oplogSize 128'.split(' '),
         Name: 'mongodb',
         Options: {
-          tasks: {
-            async: true
+          taskOptions: {
+            async: true,
+            matchOuput: _taskSuccessIfMatch(grunt, /connections on port 27017/, 'MongoDB server is started')
           },
-          startContainerOptions: { PortBindings: { '27017/tcp': [{ 'HostPort': '23457' }] }, ExtraHosts: ['mongo:127.0.0.1']},
-          matchOuput: _taskSuccessIfMatch(grunt, /connections on port 27017/, 'MongoDB server is started')
+          startContainerOptions: { PortBindings: { '27017/tcp': [{ 'HostPort': '23457' }] }, ExtraHosts: ['mongo:127.0.0.1']}
+
         }
       },
       elasticsearch: {
@@ -99,11 +101,11 @@ purpose for instance):
         Cmd: ['elasticsearch', '-Des.discovery.zen.ping.multicast.enabled=false'],
         Name: 'elasticsearch',
         Options: {
-          tasks: {
-            async: true
+          taskOptions: {
+            async: true,
+            matchOuput: _taskSuccessIfMatch(grunt, /started/, 'Elasticsearch server is started')
           },
-          startContainerOptions: { PortBindings: { '9200/tcp': [{ 'HostPort': '23458' }] }, Links: ['mongodb:mongo'] },
-          matchOuput: _taskSuccessIfMatch(grunt, /started/, 'Elasticsearch server is started')
+          startContainerOptions: { PortBindings: { '9200/tcp': [{ 'HostPort': '23458' }] }, Links: ['mongodb:mongo'] }
         }
       },
     }

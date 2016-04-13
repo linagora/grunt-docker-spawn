@@ -8,19 +8,44 @@ module.exports = function(grunt) {
   var containers = {};
 
   grunt.registerMultiTask('container', 'Run a container', function() {
-    var docker = new Docker(this.options()[grunt.option('docker')] || DEFAULT_DOCKER_OPTIONS);
-
     var options = this.options();
-    var done = options.tasks.async ? function() {} : this.async();
-
+    var taskOptions = options.taskOptions;
     var data = this.data;
     var target = this.target;
+    var command = this.args[0];
+
+    var docker = new Docker(options[grunt.option('docker')] || DEFAULT_DOCKER_OPTIONS);
+    var done;
+    var taskIsDone = false;
+    var doneTimeout;
     var container;
 
     grunt.verbose.writeflags(data, 'Data');
     grunt.verbose.writeflags(options, 'Options');
 
-    var command = this.args[0];
+    if (!taskOptions.async) {
+      var doneFn = this.async();
+      done = function(isSuccess) {
+        clearTimeout(doneTimeout);
+        if (!taskIsDone) {
+          taskIsDone = true;
+          doneFn(isSuccess);
+        }
+      }
+    } else {
+      done = function() {
+        clearTimeout(doneTimeout);
+      };
+    }
+
+    if (taskOptions.timeout) {
+      doneTimeout = setTimeout(function() {
+        if (!taskIsDone) {
+          grunt.fail.warn('Task is marked as failure because of ' + taskOptions.timeout + ' timeout');
+          done(false);
+        }
+      }, taskOptions.timeout);
+    }
 
     if (command === 'remove') {
       container = containers[target] || docker.getContainer(data.name);
@@ -43,7 +68,7 @@ module.exports = function(grunt) {
 
       container.remove(removeContainerOptions, function(err, data) {
         if (err) {
-          grunt.fatal('Unable to remove container for target: ' + target + ' - ' + err.message);
+          grunt.fail.warn('Unable to remove container for target: ' + target + ' - ' + err.message);
 
           return done(false);
         }
@@ -86,7 +111,7 @@ module.exports = function(grunt) {
           log.writeln('Successfully created container for target: ' + target + ' (id = ' + container.id + ')');
 
           // Attach a stream only if we need to parse output
-          if (typeof options.matchOutput === 'function') {
+          if (typeof taskOptions.matchOutput === 'function') {
             container.attach({stream: true, stdout: true, stderr: true}, function(err, stream) {
               if (err) {
                 grunt.fatal('Could not attach stream container for target: ' + target + ' - ' + err.message);
@@ -94,11 +119,11 @@ module.exports = function(grunt) {
               stream.setEncoding('utf8');
 
               stream.on('data', function(data) {
-                options.matchOutput(data);
+                taskOptions.matchOutput(data, done);
               });
 
               stream.on('end', function() {
-                options.matchOutput(null);
+                taskOptions.matchOutput(null, done);
               });
             });
           } else {
