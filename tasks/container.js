@@ -25,13 +25,14 @@ module.exports = function(grunt) {
 
     if (!taskOptions.async) {
       var doneFn = this.async();
+
       done = function(isSuccess) {
         clearTimeout(doneTimeout);
         if (!taskIsDone) {
           taskIsDone = true;
           doneFn(isSuccess);
         }
-      }
+      };
     } else {
       done = function() {
         clearTimeout(doneTimeout);
