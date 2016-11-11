@@ -75,37 +75,41 @@ purpose for instance):
       redis: {
         Image: 'redis:latest',
         Name: 'redis',
+        PortBindings: { '6379/tcp': [{ 'HostPort': '23456' }] },
         Options: {
           taskOptions: {
             async: true,
             matchOuput: _taskSuccessIfMatch(grunt, /on port/, 'Redis server is started')
           },
-          startContainerOptions: { PortBindings: { '6379/tcp': [{ 'HostPort': '23456' }] } }
+          startContainerOptions: {}
         }
       },
       mongodb: {
         Image: 'mongo:latest',
         Cmd: 'mongod --replSet replication --smallfiles --oplogSize 128'.split(' '),
         Name: 'mongodb',
+        PortBindings: { '27017/tcp': [{ 'HostPort': '23457' }] },
+        ExtraHosts: ['mongo:127.0.0.1'],
         Options: {
           taskOptions: {
             async: true,
             matchOuput: _taskSuccessIfMatch(grunt, /connections on port 27017/, 'MongoDB server is started')
           },
-          startContainerOptions: { PortBindings: { '27017/tcp': [{ 'HostPort': '23457' }] }, ExtraHosts: ['mongo:127.0.0.1']}
-
+          startContainerOptions: {}
         }
       },
       elasticsearch: {
         Image: 'elasticsearch:latest',
         Cmd: ['elasticsearch', '-Des.discovery.zen.ping.multicast.enabled=false'],
         Name: 'elasticsearch',
+        PortBindings: { '9200/tcp': [{ 'HostPort': '23458' }] },
+        Links: ['mongodb:mongo'],
         Options: {
           taskOptions: {
             async: true,
             matchOuput: _taskSuccessIfMatch(grunt, /started/, 'Elasticsearch server is started')
           },
-          startContainerOptions: { PortBindings: { '9200/tcp': [{ 'HostPort': '23458' }] }, Links: ['mongodb:mongo'] }
+          startContainerOptions: {}
         }
       },
     }
